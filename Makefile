@@ -33,9 +33,9 @@ $(NAME): $(OBJS) # $@ is automatic variable (shortcut) contains the target name 
 # 	ar rcs $@ $(NAME)
 
 clean: # not default (first) and not a pre-requisite anywhere else
-	@$(RM) $(OBJS)
+	$(RM) $(OBJS)
 # clean won't run unless specifically called
 # clean isn't inteded to be a file name -> therefore defined in .PHONY
 
 fclean:	clean # removes
-	@$(RM) $(NAME)
+	$(RM) $(NAME)

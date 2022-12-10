@@ -6,7 +6,7 @@
 /*   By: sabdelra <sabdelra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 19:52:35 by sabdelra          #+#    #+#             */
-/*   Updated: 2022/12/09 22:49:41 by sabdelra         ###   ########.fr       */
+/*   Updated: 2022/12/10 13:32:47 by sabdelra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	ft_printf(const char *format_string, ...)
 			print_return += convert_specifier(*format_string++, args);
 		}
 		if(!*format_string)
-			return(print_return); // to remove the
+			return(print_return);
 		write(1, format_string, 1);
 		format_string++;
 		print_return++;
@@ -45,7 +45,7 @@ int	convert_specifier(char format_specifier, va_list args)
 	int c;
 
 	convert_return = 0;
-	if(format_specifier == 'c')
+	if (format_specifier == 'c')
 	{
 		c = va_arg(args, int);
 		convert_return = write(1, &c, 1);
@@ -69,17 +69,12 @@ int	convert_specifier(char format_specifier, va_list args)
 	return (convert_return);
 }
 
-#include <limits.h>
+/* #include <limits.h>
 
 int main(void)
 {
-	// int y = ft_printf(" %p %p ", LONG_MIN, LONG_MAX);
-	int x = printf(" %p %p ", ULONG_MAX, -ULONG_MAX);
-	printf("\n\n\n");
-	// printf("pointer LONG_MIN=%p**\n\npointer LONG_MAX=%p**\n\n", LONG_MIN, LONG_MAX);
-	printf("ft_printf return is: %d\n\n", x);
-	// printf("printf is : %d\nft_printf is : %d\n\n\n", x, y);
-}
+	int y = ft_printf(" %p %p ", LONG_MIN, LONG_MAX);
+	int x = printf(" %p %p ", LONG_MIN, LONG_MAX);
+	printf("printf is : %d\nft_printf is : %d\n\n\n", x, y);
+} */
 
-
-// " %p %p ", 0, 0

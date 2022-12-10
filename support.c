@@ -6,7 +6,7 @@
 /*   By: sabdelra <sabdelra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 20:13:23 by sabdelra          #+#    #+#             */
-/*   Updated: 2022/12/09 22:49:06 by sabdelra         ###   ########.fr       */
+/*   Updated: 2022/12/10 13:40:18 by sabdelra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	length_of_integer(unsigned int x)
 		return (1 + length_of_integer(x/10));
 }
 
-int	length_of_hex(long x)
+int	length_of_hex(unsigned long int x)
 {
 	if(x/16 == 0)
 		return (1);
@@ -120,3 +120,4 @@ int	putptr(unsigned long x)
 	write(1, result, length);
 	return (length);
 }
+
