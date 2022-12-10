@@ -6,19 +6,18 @@
 /*   By: sabdelra <sabdelra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 19:52:35 by sabdelra          #+#    #+#             */
-/*   Updated: 2022/12/10 13:32:47 by sabdelra         ###   ########.fr       */
+/*   Updated: 2022/12/10 17:33:49 by sabdelra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	convert_specifier(char format_specifier, va_list args);
+static int	convert_specifier(char format_specifier, va_list args);
 
 int	ft_printf(const char *format_string, ...)
 {
 	va_list args;
 	int print_return;
-
 
 	print_return = 0;
 	va_start(args, format_string);
@@ -29,52 +28,37 @@ int	ft_printf(const char *format_string, ...)
 			format_string++;
 			print_return += convert_specifier(*format_string++, args);
 		}
-		if(!*format_string)
+		else if(!*format_string)
 			return(print_return);
-		write(1, format_string, 1);
-		format_string++;
-		print_return++;
+		else
+		{
+			write(1, format_string, 1);
+			format_string++;
+			print_return++;
+		}
 	}
+	va_end(args);
 	return (print_return);
 }
 
-int	convert_specifier(char format_specifier, va_list args)
+static int	convert_specifier(char format_specifier, va_list args)
 {
 	int convert_return;
-	char *string;
-	int c;
 
 	convert_return = 0;
-	if (format_specifier == 'c')
-	{
-		c = va_arg(args, int);
-		convert_return = write(1, &c, 1);
-	}
+	if(format_specifier == 'c')
+		convert_return = putstr(format_specifier, args);
 	else if(format_specifier == 's')
-	{
-		string = (va_arg(args, char *));
-		if (!string)
-			convert_return = write(1, "(null)", 6); // dumb fix
-		else
-			convert_return = write(1, string, ft_strlen(string));
-	}
-	else if (format_specifier == 'd' || format_specifier == 'i' || format_specifier == 'u')
-		convert_return = ft_itoa(va_arg(args,long int));
+		convert_return = putstr(format_specifier, args);
+	else if (format_specifier == 'd' || format_specifier == 'i')
+		convert_return = putnbr(va_arg(args, int));
+	else if (format_specifier == 'u')
+		convert_return = putnbr_unsigned(va_arg(args, unsigned int));
 	else if (format_specifier == 'x' || format_specifier == 'X')
-		convert_return = ft_hex(va_arg(args, long int), format_specifier);
+		convert_return = puthex(va_arg(args,unsigned int), format_specifier);
 	else if (format_specifier == 'p')
 		convert_return = putptr(va_arg(args, unsigned long));
 	else if (format_specifier == '%')
 		convert_return = write(1, "%", 1);
 	return (convert_return);
 }
-
-/* #include <limits.h>
-
-int main(void)
-{
-	int y = ft_printf(" %p %p ", LONG_MIN, LONG_MAX);
-	int x = printf(" %p %p ", LONG_MIN, LONG_MAX);
-	printf("printf is : %d\nft_printf is : %d\n\n\n", x, y);
-} */
-

@@ -6,7 +6,7 @@
 /*   By: sabdelra <sabdelra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 20:13:23 by sabdelra          #+#    #+#             */
-/*   Updated: 2022/12/10 13:40:18 by sabdelra         ###   ########.fr       */
+/*   Updated: 2022/12/10 18:22:33 by sabdelra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,69 +14,68 @@
 
 int	ft_strlen(char *string)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	if(!string)
+	if (!string)
 		return (0);
-	while(string[i])
+	while (string[i])
 		i++;
 	return (i);
 }
 
-int	length_of_integer(unsigned int x)
+int	length_of_integer(int x)
 {
-	if(x/10 == 0)
+	if (x < 0)
+		x *= -1;
+	if (x / 10 == 0)
 		return (1);
 	else
-		return (1 + length_of_integer(x/10));
+		return (1 + length_of_integer(x / 10));
 }
 
 int	length_of_hex(unsigned long int x)
 {
-	if(x/16 == 0)
+	if (x / 16 == 0)
 		return (1);
 	else
-		return (1 + length_of_hex(x/16));
+		return (1 + length_of_hex(x / 16));
 }
 
-int	ft_itoa(long int x)
+int	putnbr(int x)
 {
-	int length;
-	int i;
+	int		length;
+	int		i;
+	char	*result;
 
-	length = 0;
-	if (!x)
-		return 0;
+	if (x == INT_MIN)
+		return (write(1, "-2147483648", 11));
+	length = 1 + length_of_integer(x);
 	if (x < 0)
-	{
-		x = -x;
-		length = 1;
-	}
-	length += length_of_integer(x);
+		x *= -1;
+	else
+		length--;
+	result = (char *)malloc(sizeof(char) * length);
 	i = length - 1;
-	char result[length];
 	result[0] = '-';
 	if (x == 0)
 		result[0] = '0';
-	while(x > 0)
+	while (x > 0)
 	{
-		result[i] = (x % 10) + '0';
+		result[i--] = (x % 10) + '0';
 		x /= 10;
-		i--;
 	}
 	write(1, result, length);
+	free(result);
 	return (length);
 }
 
-int	ft_hex(long x, char upper_lower_case)
+int	puthex(unsigned int x, char upper_lower_case)
 {
 	int length;
 	int i;
 	char *hex;
 
-	if (!x)
-		return 0;
 	if (upper_lower_case == 'x')
 		hex = "0123456789abcdef";
 	else if (upper_lower_case == 'X')
@@ -103,13 +102,13 @@ int	putptr(unsigned long x)
 	char *hex;
 
 	length = 0;
-	if (!x)
-		return (write(1, "(null)", 6));
 	hex = "0123456789abcdef";
 	length += length_of_hex(x) + 2;
 	char result[length];
 	result[0] = '0';
 	result[1] = 'x';
+	if (!x)
+		result[2] = '0';
 	i = length - 1;
 	while(x > 0)
 	{
@@ -121,3 +120,45 @@ int	putptr(unsigned long x)
 	return (length);
 }
 
+int	putstr(char format_specifier, va_list args)
+{
+	int convert_return;
+	char *string;
+	int c;
+
+	convert_return = 0;
+	if(format_specifier == 'c')
+	{
+		c = va_arg(args, int);
+		convert_return = write(1, &c, 1);
+	}
+	else if(format_specifier == 's')
+	{
+		string = (va_arg(args, char *));
+		if (!string)
+			convert_return = write(1, "(null)", 6);
+		else
+			convert_return = write(1, string, ft_strlen(string));
+	}
+	return (convert_return);
+}
+
+int putnbr_unsigned(unsigned int x)
+{
+	int length;
+	int i;
+
+	length = length_of_integer(x);
+	i = length - 1;
+	char result[length];
+	if (x == 0)
+		result[0] = '0';
+	while(x > 0)
+	{
+		result[i] = (x % 10) + '0';
+		x /= 10;
+		i--;
+	}
+	write(1, result, length);
+	return (length);
+}
