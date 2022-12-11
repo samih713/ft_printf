@@ -6,7 +6,7 @@
 /*   By: sabdelra <sabdelra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 20:13:23 by sabdelra          #+#    #+#             */
-/*   Updated: 2022/12/10 18:22:33 by sabdelra         ###   ########.fr       */
+/*   Updated: 2022/12/11 17:42:52 by sabdelra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,4 +161,13 @@ int putnbr_unsigned(unsigned int x)
 	}
 	write(1, result, length);
 	return (length);
+}
+
+// bonus utils
+
+int	is_numeric(char c)
+{
+	if (c <= '9' && c >= '1') // between 1 and 9 as 0 is for justifying with 0's
+		return (1);
+	return (0); 
 }

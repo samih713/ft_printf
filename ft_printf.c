@@ -6,9 +6,19 @@
 /*   By: sabdelra <sabdelra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 19:52:35 by sabdelra          #+#    #+#             */
-/*   Updated: 2022/12/10 17:33:49 by sabdelra         ###   ########.fr       */
+/*   Updated: 2022/12/11 19:23:38 by sabdelra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+
+/*
+[to-do] learn wtf ar rcs is
+
+[to-do] Bonus
+%[flags][width]specifier
+ */
+
+
 
 #include "ft_printf.h"
 
@@ -26,7 +36,8 @@ int	ft_printf(const char *format_string, ...)
 		if (*format_string == '%')
 		{
 			format_string++;
-			print_return += convert_specifier(*format_string++, args);
+			// goes here
+			print_return += convert_specifier(*format_string++, args); // if its not fs returns 0 and carries on
 		}
 		else if(!*format_string)
 			return(print_return);
@@ -62,3 +73,11 @@ static int	convert_specifier(char format_specifier, va_list args)
 		convert_return = write(1, "%", 1);
 	return (convert_return);
 }
+
+#include <stdio.h>
+
+int main(void)
+{
+	printf("%-------4d", 55);
+}
+

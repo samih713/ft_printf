@@ -6,7 +6,7 @@
 /*   By: sabdelra <sabdelra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 20:10:03 by sabdelra          #+#    #+#             */
-/*   Updated: 2022/12/10 18:23:04 by sabdelra         ###   ########.fr       */
+/*   Updated: 2022/12/11 19:45:23 by sabdelra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,22 @@ int	putstr(char format_specifier, va_list args);
 int	ft_strlen(char *string);
 int	length_of_integer(int x);
 int	length_of_hex(unsigned long int x);
+
+// bonus
+typedef int bool;
+#define true 1
+#define false 0
+
+typedef struct s_flag_width
+{
+	bool	left_justify;
+	bool	zero;
+	//int		digits;
+}	t_flag_width;
+
+int	is_numeric(char c);
+
+
+
 
 #endif
