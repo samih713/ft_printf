@@ -20,6 +20,7 @@
 #include <stdlib.h>
 
 int	ft_printf(const char *format_string, ...);
+int	convert_specifier(char format_specifier, va_list args);
 
 // put
 int	putnbr(int x);
@@ -41,13 +42,18 @@ typedef int bool;
 typedef struct s_flag_width
 {
 	bool	left_justify;
-	bool	zero;
-	//int		digits;
+	bool	hash;
+	bool	precision;
+	char	show_positive;
+	int		precision_value;
+	char	padding;
+	int		width;
+	char	*string;
 }	t_flag_width;
 
 int	is_numeric(char c);
-
-
-
+int	parse(const char **format_string, va_list args);
+int	is_flag(const char format_string);
+t_flag_width init_strct(const char **format_string);
 
 #endif

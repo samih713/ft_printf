@@ -22,12 +22,13 @@
 
 #include "ft_printf.h"
 
-static int	convert_specifier(char format_specifier, va_list args);
+int	convert_specifier(char format_specifier, va_list args);
 
 int	ft_printf(const char *format_string, ...)
 {
 	va_list args;
 	int print_return;
+	int flag_id;
 
 	print_return = 0;
 	va_start(args, format_string);
@@ -36,8 +37,14 @@ int	ft_printf(const char *format_string, ...)
 		if (*format_string == '%')
 		{
 			format_string++;
-			// goes here
-			print_return += convert_specifier(*format_string++, args); // if its not fs returns 0 and carries on
+			flag_id = is_flag(*format_string); 
+			if (flag_id)
+			{
+				print_return += parse(&format_string, args);
+				*format_string++;
+			}
+			else
+				print_return += convert_specifier(*format_string++, args); // if its not fs returns 0 and carries on
 		}
 		else if(!*format_string)
 			return(print_return);
@@ -52,7 +59,7 @@ int	ft_printf(const char *format_string, ...)
 	return (print_return);
 }
 
-static int	convert_specifier(char format_specifier, va_list args)
+int	convert_specifier(char format_specifier, va_list args)
 {
 	int convert_return;
 
@@ -78,6 +85,7 @@ static int	convert_specifier(char format_specifier, va_list args)
 
 int main(void)
 {
-	printf("%-------4d", 55);
+	printf("%045d\n\n", 55);
+	ft_printf("%045d\n\n", 55);
 }
 
