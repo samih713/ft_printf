@@ -39,7 +39,7 @@ typedef int bool;
 #define true 1
 #define false 0
 
-typedef struct s_flag_width
+typedef struct s_flag
 {
 	bool	left_justify;
 	bool	hash;
@@ -48,12 +48,13 @@ typedef struct s_flag_width
 	int		precision_value;
 	char	padding;
 	int		width;
-	char	*string;
-}	t_flag_width;
+	//char	*string;
+}	t_flag;
+
 
 int	is_numeric(char c);
 int	parse(const char **format_string, va_list args);
-int	is_flag(const char format_string);
-t_flag_width init_strct(const char **format_string);
+int	is_flag_numeric(const char format_string, t_flag *formating);
+t_flag *init_strct(const char **format_string);
 
 #endif
