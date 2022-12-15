@@ -42,21 +42,26 @@ int	length_of_hex(unsigned long int x)
 		return (1 + length_of_hex(x / 16));
 }
 
-int	putnbr(int x)
+char	*putnbr(int x)
 {
 	int		length;
-	int		i;
+	int		i; // remove i no need for it since not returning length anymore
 	char	*result;
 
 	if (x == INT_MIN)
-		return (write(1, "-2147483648", 11));
+	{
+		result = (char *)malloc(sizeof(char) * 12);
+		result = "-2147483648";
+		return (result);
+	}
 	length = 1 + length_of_integer(x);
 	if (x < 0)
 		x *= -1;
 	else
 		length--;
-	result = (char *)malloc(sizeof(char) * length);
+	result = (char *)malloc(sizeof(char) * length + 1);
 	i = length - 1;
+	result[length] = '\0';
 	result[0] = '-';
 	if (x == 0)
 		result[0] = '0';
@@ -65,9 +70,7 @@ int	putnbr(int x)
 		result[i--] = (x % 10) + '0';
 		x /= 10;
 	}
-	write(1, result, length);
-	free(result);
-	return (length);
+	return (result); // free after it gets copied
 }
 
 int	puthex(unsigned int x, char upper_lower_case)

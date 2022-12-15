@@ -17,13 +17,14 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <limits.h>
+#include <string.h>
 #include <stdlib.h>
 
 int	ft_printf(const char *format_string, ...);
-int	convert_specifier(char format_specifier, va_list args);
+char	*convert_specifier(char format_specifier, va_list args);
 
 // put
-int	putnbr(int x);
+char	*putnbr(int x);
 int	puthex(unsigned int x, char upper_lower_case);
 int	putptr(unsigned long x);
 int putnbr_unsigned(unsigned int);
@@ -48,7 +49,8 @@ typedef struct s_flag
 	int		precision_value;
 	char	padding;
 	int		width;
-	//char	*string;
+	char	*string;
+	int		string_length;
 }	t_flag;
 
 

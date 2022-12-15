@@ -14,7 +14,8 @@ typedef struct s_flag
 	int		precision_value;
 	char	padding;
 	int		width;
-	//char	*string;
+	char	*string;
+	int		string_length;
 }	t_flag;
 
 int	is_numeric(char c)
@@ -55,6 +56,32 @@ int	is_flag_numeric(const char format_string, t_flag *formating) // make it chec
 	return (0);
 }
 
+char	*create_padding(t_flag *formating) //create the padding string
+{
+	char	*pad;
+	int		size;
+
+	size = 0;
+	if (formating->width)
+		size = formating->width - formating->string_length; // to determine min width
+	if (formating->hash)									// space for 0x
+		size -= 2;
+	else if (formating->show_positive) // no show positive with hash ??
+		size -= 1;
+	if (size > 0)
+	{
+		pad = (char *)malloc(sizeof(char) * size + 1); // + 1 to place a null
+		if (!pad)
+			return (0);
+	}
+	else
+		return (NULL);
+	pad[size] = '\0';
+	while(--size > 0)
+		pad[size] = formating->padding;
+	return (pad);
+}
+
 t_flag *init_strct(const char **format_string)
 {
 	t_flag *formating;
@@ -89,18 +116,59 @@ t_flag *init_strct(const char **format_string)
 	return(formating);
 }
 
+int	parse(const char **format_string, va_list args) // fix the parsing to make string in the struct
+{
+	t_flag		*formating;
+	char		*result;
+	const char	*padding;
+	size_t		sign_length; 
+	// needs to be freed
+
+	sign_length += ft_strlen(formating->hash) + ft_strlen(formating->show_positive);
+	//result_length = 0;
+	formating = init_strct(format_string); // after struct is initialized, ptr is at specifier hopefully
+	formating->string = convert_specifier(**format_string, args);
+	formating->string_length = ft_strlen(formating->string);
+	padding = create_padding(formating);
+	if (formating->width > (formating->string_length + sign_length)) // maybe just width
+		result = (char *)malloc(sizeof(char) * formating->width);
+	else
+		result = (char *)malloc(sizeof(char) * formating->string_length + sign_length);
+	if (!result)
+		return 0;
+	if (formating->left_justify)
+	{
+		strncat(result, padding, ft_strlen(padding));
+		if (formating->show_positive)
+			strncat(result, formating->show_positive , 1);
+		if (formating->hash)
+			strncat(result, "0x", 2);
+		strncat(result, formating->string, formating->string_length);
+	}
+	else
+	{
+		strncat(result, formating->string, formating->string_length);
+		if (formating->show_positive)
+			strncat(result, formating->show_positive , 1);
+		if (formating->hash)
+			strncat(result, "0x", 2);
+		strncat(result, padding, ft_strlen(padding));
+	}
+	write(1, result, ft_strlen(result));
+	return (ft_strlen(result));
+}
+
+
+
+
+
+
+
+
+
+
 
 int main(void)
 {
-    t_flag *flag_width;
-    const char *format_string = "+-08.5d";
-
-    flag_width = init_strct(&format_string);
-    printf("left_justify: %d\n", flag_width->left_justify)	;
-	printf("hash:         %d\n", flag_width->hash)	;
-	printf("precision:    %d\n", flag_width->precision)	;
-    printf("showpositive: %c\n", flag_width->show_positive);
-    printf("pre_value:    %d\n", flag_width->precision_value);
-    printf("padding:      %c\n", flag_width->padding);
-    printf("width         %d\n", flag_width->width);
+    char *string = "%-54.2d";
 }
