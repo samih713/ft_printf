@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-int	ft_strlen(char *string)
+int	ft_strlen(const char *string)
 {
 	int	i;
 
@@ -73,18 +73,22 @@ char	*putnbr(int x)
 	return (result); // free after it gets copied
 }
 
-int	puthex(unsigned int x, char upper_lower_case)
+char	*puthex(unsigned int x, char upper_lower_case)
 {
 	int length;
 	int i;
 	char *hex;
+	char *result;
 
 	if (upper_lower_case == 'x')
 		hex = "0123456789abcdef";
 	else if (upper_lower_case == 'X')
 		hex = "0123456789ABCDEF";
 	length = length_of_hex(x);
-	char result[length];
+	result = malloc(sizeof(char) * length + 1);
+	if (!result)
+		return 0;
+	result[length] = '\0';
 	i = length - 1;
 	if (x == 0)
 		result[0] = '0';
@@ -94,8 +98,7 @@ int	puthex(unsigned int x, char upper_lower_case)
 		x /= 16;
 		i--;
 	}
-	write(1, result, length);
-	return (length);
+	return (result);
 }
 
 int	putptr(unsigned long x)
@@ -123,7 +126,7 @@ int	putptr(unsigned long x)
 	return (length);
 }
 
-int	putstr(char format_specifier, va_list args)
+char	*putstr(char format_specifier, va_list args)
 {
 	int convert_return;
 	char *string;
@@ -132,28 +135,29 @@ int	putstr(char format_specifier, va_list args)
 	convert_return = 0;
 	if(format_specifier == 'c')
 	{
-		c = va_arg(args, int);
-		convert_return = write(1, &c, 1);
+		string = malloc(sizeof(char) + 1);
+		string[0] = (char)va_arg(args, int);
+		string[1] = '\0';
 	}
 	else if(format_specifier == 's')
 	{
 		string = (va_arg(args, char *));
-		if (!string)
-			convert_return = write(1, "(null)", 6);
-		else
-			convert_return = write(1, string, ft_strlen(string));
 	}
-	return (convert_return);
+	return (string);
 }
 
-int putnbr_unsigned(unsigned int x)
+char	*putnbr_unsigned(unsigned int x)
 {
-	int length;
-	int i;
+	int	length;
+	int	i;
+	char *result;
 
 	length = length_of_integer(x);
 	i = length - 1;
-	char result[length];
+	result = malloc(sizeof(char) * length + 1);
+	if (!result)
+		return 0;
+	result[length] = '\0';
 	if (x == 0)
 		result[0] = '0';
 	while(x > 0)
@@ -162,8 +166,7 @@ int putnbr_unsigned(unsigned int x)
 		x /= 10;
 		i--;
 	}
-	write(1, result, length);
-	return (length);
+	return (result);
 }
 
 // bonus utils

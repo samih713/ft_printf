@@ -13,7 +13,7 @@
 
 #include "ft_printf.h"
 
-int	is_flag_numeric(const char format_string, t_flag *formating) // make it check for numeric here and set accordingly precision or width
+int	is_flag_numeric(const char format_string, t_flag *formating)
 {
 	char *flags;
 	int flag_id;
@@ -44,29 +44,33 @@ int	is_flag_numeric(const char format_string, t_flag *formating) // make it chec
 	return (0);
 }
 
-char	*create_padding(t_flag *formating) //create the padding string
+//create the padding string
+char	*create_padding(t_flag *formating) 
 {
 	char	*pad;
 	int		size;
 
 	size = 0;
 	if (formating->width)
-		size = formating->width - formating->string_length; // to determine min width
-	if (formating->hash)									// space for 0x
+		size = formating->width - formating->string_length; 
+	if (formating->hash)									
 		size -= 2;
 	else if (formating->show_positive) // no show positive with hash ??
 		size -= 1;
 	if (size > 0)
 	{
-		pad = (char *)malloc(sizeof(char) * size + 1); // + 1 to place a null
+		pad = (char *)malloc(sizeof(char) * size + 1);
 		if (!pad)
 			return (0);
 	}
 	else
 		return (NULL);
-	pad[size] = '\0';
-	while(--size > 0)
+	pad[size--] = '\0';
+	while(size >= 0)
+	{
 		pad[size] = formating->padding;
+		size--;
+	}
 	return (pad);
 }
 
@@ -83,7 +87,7 @@ t_flag *init_strct(const char **format_string)
     formating->precision_value = 0;
 	formating->padding = ' ';
 	formating->precision = false;
-    formating->show_positive = '\0'; // make sure to use as ! if nothing is specified
+    formating->show_positive = 0; // make sure to use as ! if nothing is specified
     formating->left_justify = false;
 	while(is_flag_numeric(**format_string, formating))
 	{
@@ -93,10 +97,10 @@ t_flag *init_strct(const char **format_string)
 			formating->left_justify = true;
 		else if (**format_string == '#')
 			formating->hash = true;
-		else if (**format_string == '+')
-			formating->show_positive = '+';
-		else if (**format_string == ' ')
-			formating->show_positive = ' ';
+		else if (formating->show_positive != " " && **format_string == '+')
+			formating->show_positive = "+";
+		else if (formating->show_positive != "+" &&**format_string == ' ')
+			formating->show_positive = " ";
 		else if (**format_string == '.')
 			formating->precision = true;
 		(*format_string)++;
@@ -104,24 +108,21 @@ t_flag *init_strct(const char **format_string)
 	return(formating);
 }
 
-int	parse(const char **format_string, va_list args) // fix the parsing to make string in the struct
+int	parse(const char **format_string, va_list args, t_flag *formating) 
 {
-	t_flag		*formating;
 	char		*result;
-	const char	*padding;
+	const char	*pad;
 	size_t		sign_length; 
 	// needs to be freed
 	sign_length = 0;
 	if (formating->hash)
 		sign_length += 2;
-	if (formating->show_positive)
+	else if (formating->show_positive)
 		sign_length += 1;
-	//result_length = 0;
-	formating = init_strct(format_string); // after struct is initialized, ptr is at specifier hopefully
 	formating->string = convert_specifier(**format_string, args);
 	formating->string_length = ft_strlen(formating->string);
-	padding = create_padding(formating);
-	if (formating->width > (formating->string_length + sign_length)) // maybe just width
+	pad = create_padding(formating);
+	if (formating->width > (formating->string_length + sign_length)) 
 		result = (char *)malloc(sizeof(char) * formating->width);
 	else
 		result = (char *)malloc(sizeof(char) * formating->string_length + sign_length);
@@ -129,36 +130,25 @@ int	parse(const char **format_string, va_list args) // fix the parsing to make s
 		return 0;
 	if (formating->left_justify)
 	{
-		strncat(result, padding, ft_strlen(padding));
 		if (formating->show_positive)
 			strncat(result, formating->show_positive , 1);
-		if (formating->hash)
-			strncat(result, "0x", 2);
+		else if (formating->hash)
+			strncat(result, "0x", 3);
 		strncat(result, formating->string, formating->string_length);
+		strncat(result, pad, ft_strlen(pad));
 	}
 	else
 	{
-		strncat(result, formating->string, formating->string_length);
+		if (formating->hash)
+			strncat(result, "0x", 3);
+		strncat(result, pad, ft_strlen(pad));
 		if (formating->show_positive)
 			strncat(result, formating->show_positive , 1);
-		if (formating->hash)
-			strncat(result, "0x", 2);
-		strncat(result, padding, ft_strlen(padding));
+		strncat(result, formating->string, formating->string_length);
 	}
 	write(1, result, ft_strlen(result));
 	return (ft_strlen(result));
 }
-
-
-	// //bool	left_justify;
-	// //bool	hash;
-	// bool	precision;
-	// //char	show_positive;
-	// int		precision_value;
-	// //char	padding;
-	// //int		width;
-	// char	*string;
-	// int		string_length;
 
 	// [list to free]
 	// convert_specifier result
