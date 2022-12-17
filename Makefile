@@ -13,7 +13,7 @@
 
 CFLAGS = -Wall -Werror -Wextra
 
-SRCS = support.c ft_printf.c
+SRCS = support.c ft_printf.c bonsu.c
 
 OBJS = $(SRCS:.c=.o)
 

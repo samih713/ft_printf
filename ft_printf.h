@@ -29,7 +29,7 @@ char	*putnbr(int x);
 char	*putstr(char format_specifier, va_list args);
 char	*putnbr_unsigned(unsigned int x);
 char	*puthex(unsigned int x, char upper_lower_case);
-int	putptr(unsigned long x);
+char	*putptr(unsigned long x);
 
 // utilies
 int	ft_strlen(const char *string);
@@ -37,15 +37,15 @@ int	length_of_integer(int x);
 int	length_of_hex(unsigned long int x);
 
 // bonus
-typedef int bool;
+typedef int BOOL;
 #define true 1
 #define false 0
 
 typedef struct s_flag
 {
-	bool	left_justify;
-	bool	hash;
-	bool	precision;
+	BOOL	left_justify;
+	BOOL	hash;
+	BOOL	precision;
 	char	*show_positive;
 	int		precision_value;
 	char	padding;

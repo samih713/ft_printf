@@ -59,12 +59,16 @@ char	*create_padding(t_flag *formating)
 		size -= 1;
 	if (size > 0)
 	{
-		pad = (char *)malloc(sizeof(char) * size + 1);
+		pad = malloc(sizeof(char) * size + 1);
 		if (!pad)
 			return (0);
 	}
 	else
-		return (NULL);
+	{
+		pad = malloc(1);
+		pad[0] = '\0';
+		return (pad);
+	}
 	pad[size--] = '\0';
 	while(size >= 0)
 	{
@@ -89,6 +93,8 @@ t_flag *init_strct(const char **format_string)
 	formating->precision = false;
     formating->show_positive = 0; // make sure to use as ! if nothing is specified
     formating->left_justify = false;
+	formating->hash = 0;
+	formating->string = NULL;
 	while(is_flag_numeric(**format_string, formating))
 	{
 		if (!(formating->left_justify) && **format_string == '0')
@@ -97,9 +103,9 @@ t_flag *init_strct(const char **format_string)
 			formating->left_justify = true;
 		else if (**format_string == '#')
 			formating->hash = true;
-		else if (formating->show_positive != " " && **format_string == '+')
+		else if (formating->show_positive == 0 && **format_string == '+')
 			formating->show_positive = "+";
-		else if (formating->show_positive != "+" &&**format_string == ' ')
+		else if (formating->show_positive == 0 &&**format_string == ' ')
 			formating->show_positive = " ";
 		else if (**format_string == '.')
 			formating->precision = true;
@@ -110,10 +116,10 @@ t_flag *init_strct(const char **format_string)
 
 int	parse(const char **format_string, va_list args, t_flag *formating) 
 {
-	char		*result;
-	const char	*pad;
-	size_t		sign_length; 
-	// needs to be freed
+	char	*result;
+	char	*pad;
+	int		sign_length; 
+
 	sign_length = 0;
 	if (formating->hash)
 		sign_length += 2;
@@ -146,12 +152,11 @@ int	parse(const char **format_string, va_list args, t_flag *formating)
 			strncat(result, formating->show_positive , 1);
 		strncat(result, formating->string, formating->string_length);
 	}
-	write(1, result, ft_strlen(result));
-	return (ft_strlen(result));
+	if (pad)
+		free(pad);
+	sign_length = ft_strlen(result);
+	write(1, result, sign_length);
+	if (result)
+		free(result);
+	return (sign_length);
 }
-
-	// [list to free]
-	// convert_specifier result
-	// formating struct
-	// padding
-	// free result after writing it

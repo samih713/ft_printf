@@ -1,4 +1,5 @@
-/* ************************************************************************** */
+
+ /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   support.c                                          :+:      :+:    :+:   */
@@ -17,7 +18,7 @@ int	ft_strlen(const char *string)
 	int	i;
 
 	i = 0;
-	if (!string)
+	if (string[0] == '\0')
 		return (0);
 	while (string[i])
 		i++;
@@ -87,7 +88,7 @@ char	*puthex(unsigned int x, char upper_lower_case)
 	length = length_of_hex(x);
 	result = malloc(sizeof(char) * length + 1);
 	if (!result)
-		return 0;
+		return (0);
 	result[length] = '\0';
 	i = length - 1;
 	if (x == 0)
@@ -101,18 +102,21 @@ char	*puthex(unsigned int x, char upper_lower_case)
 	return (result);
 }
 
-int	putptr(unsigned long x)
+char	*putptr(unsigned long x)
 {
-	int length;
-	int i;
-	char *hex;
+	int		length;
+	int		i;
+	char	*hex;
+	char	*result;
 
-	length = 0;
 	hex = "0123456789abcdef";
-	length += length_of_hex(x) + 2;
-	char result[length];
+	length = length_of_hex(x) + 2;
+	result = malloc(sizeof(char) * length + 1);
+	if(!result)
+		return (0);
 	result[0] = '0';
 	result[1] = 'x';
+	result[length] = '\0';
 	if (!x)
 		result[2] = '0';
 	i = length - 1;
@@ -122,17 +126,13 @@ int	putptr(unsigned long x)
 		x /= 16;
 		i--;
 	}
-	write(1, result, length);
-	return (length);
+	return (result);
 }
 
 char	*putstr(char format_specifier, va_list args)
 {
-	int convert_return;
 	char *string;
-	int c;
 
-	convert_return = 0;
 	if(format_specifier == 'c')
 	{
 		string = malloc(sizeof(char) + 1);
