@@ -13,35 +13,50 @@
 
 #include "ft_printf.h"
 
-int	is_flag_numeric(const char format_string, t_flag *formating)
+int	is_flag_numeric(const char **format_string, t_flag *formating)
 {
 	char *flags;
-	int flag_id;
+	int r;
 
 
 	flags = "-.0# +"; 
-	flag_id = 0;
-    if(is_numeric(format_string))
-    {
+	r = 0;
+	while (*flags)
+	{
+		if (*flags == **format_string)
+			return (1);
+		flags++;
+	}	
+    while(is_numeric(**format_string))
+    {	
+		r = 1;
         if (formating->precision)
         {
             formating->precision_value *= 10;
-            formating->precision_value += format_string - '0';
+            formating->precision_value += **format_string - '0';
+			if(*((*format_string) + 1) && *((*format_string) + 1) == '0')
+			{
+				formating->precision_value *= 10;
+				(*format_string)++;
+			}
+			else
+				(*format_string)++;
+
         }
         else
         {
             formating->width *= 10;
-            formating->width += format_string - '0';
+            formating->width += **format_string - '0';
+			if(*((*format_string) + 1) && *((*format_string) + 1) == '0')
+			{
+				formating->width *= 10;
+				(*format_string)++;
+			}
+			else
+				(*format_string)++;
         }
-        return (1);	
     }
-	while (flags[flag_id])
-	{
-		if (flags[flag_id] == format_string)
-			return (1);
-		flag_id++;
-	}	
-	return (0);
+	return (r);	
 }
 
 //create the padding string
@@ -82,7 +97,6 @@ t_flag *init_strct(const char **format_string)
 {
 	t_flag *formating;
 
-    // malloc the correct size of the struct not *struct dumbass
     formating = (t_flag *)malloc(sizeof(t_flag));
     if (!formating)
         return (NULL);  
@@ -95,7 +109,7 @@ t_flag *init_strct(const char **format_string)
     formating->left_justify = false;
 	formating->hash = 0;
 	formating->string = NULL;
-	while(is_flag_numeric(**format_string, formating))
+	while(is_flag_numeric(format_string, formating))
 	{
 		if (!(formating->left_justify) && **format_string == '0')
 			formating->padding = '0';	
@@ -118,20 +132,24 @@ int	parse(const char **format_string, va_list args, t_flag *formating)
 {
 	char	*result;
 	char	*pad;
-	int		sign_length; 
+	int		length; 
 
-	sign_length = 0;
+	length = 0;
 	if (formating->hash)
-		sign_length += 2;
+		length += 2;
 	else if (formating->show_positive)
-		sign_length += 1;
+		length += 1;
 	formating->string = convert_specifier(**format_string, args);
-	formating->string_length = ft_strlen(formating->string);
-	pad = create_padding(formating);
-	if (formating->width > (formating->string_length + sign_length)) 
-		result = (char *)malloc(sizeof(char) * formating->width);
+	if (formating->string)
+		formating->string_length = ft_strlen(formating->string);
 	else
-		result = (char *)malloc(sizeof(char) * formating->string_length + sign_length);
+		formating->string_length = 1;
+	pad = create_padding(formating);
+	if (formating->width > (formating->string_length + length)) 
+		//better use calloc when using it to cat as the string might not be empty and you might cat + junk values
+		result = (char *)calloc(formating->width + 1 ,sizeof(char)); 
+	else
+		result = (char *)calloc(formating->string_length + length + 1 ,sizeof(char));
 	if (!result)
 		return 0;
 	if (formating->left_justify)
@@ -154,9 +172,11 @@ int	parse(const char **format_string, va_list args, t_flag *formating)
 	}
 	if (pad)
 		free(pad);
-	sign_length = ft_strlen(result);
-	write(1, result, sign_length);
+	if (formating->string)
+		free(formating->string);
+	length = ft_strlen(result);
+	write(1, result, length);
 	if (result)
 		free(result);
-	return (sign_length);
+	return (length);
 }

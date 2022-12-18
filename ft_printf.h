@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int	ft_printf(const char *format_string, ...);
+int		ft_printf(const char *format_string, ...);
 char	*convert_specifier(char format_specifier, va_list args);
 
 // put
@@ -57,7 +57,7 @@ typedef struct s_flag
 
 int	is_numeric(char c);
 int	parse(const char **format_string, va_list args, t_flag *formating);
-int	is_flag_numeric(const char format_string, t_flag *formating);
+int	is_flag_numeric(const char **format_string, t_flag *formating);
 t_flag *init_strct(const char **format_string);
 
 #endif

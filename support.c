@@ -46,32 +46,30 @@ int	length_of_hex(unsigned long int x)
 char	*putnbr(int x)
 {
 	int		length;
-	int		i; // remove i no need for it since not returning length anymore
-	char	*result;
+	char	*convert_return;
 
 	if (x == INT_MIN)
 	{
-		result = (char *)malloc(sizeof(char) * 12);
-		result = "-2147483648";
-		return (result);
+		convert_return = (char *)malloc(sizeof(char) * 12);
+		convert_return = "-2147483648";
+		return (convert_return);
 	}
 	length = 1 + length_of_integer(x);
 	if (x < 0)
 		x *= -1;
 	else
 		length--;
-	result = (char *)malloc(sizeof(char) * length + 1);
-	i = length - 1;
-	result[length] = '\0';
-	result[0] = '-';
+	convert_return = (char *)malloc(sizeof(char) * length + 1);
+	convert_return[length--] = '\0';
+	convert_return[0] = '-';
 	if (x == 0)
-		result[0] = '0';
+		convert_return[0] = '0';
 	while (x > 0)
 	{
-		result[i--] = (x % 10) + '0';
+		convert_return[length--] = (x % 10) + '0';
 		x /= 10;
 	}
-	return (result); // free after it gets copied
+	return (convert_return);
 }
 
 char	*puthex(unsigned int x, char upper_lower_case)
@@ -79,27 +77,27 @@ char	*puthex(unsigned int x, char upper_lower_case)
 	int length;
 	int i;
 	char *hex;
-	char *result;
+	char *convert_return;
 
 	if (upper_lower_case == 'x')
 		hex = "0123456789abcdef";
 	else if (upper_lower_case == 'X')
 		hex = "0123456789ABCDEF";
 	length = length_of_hex(x);
-	result = malloc(sizeof(char) * length + 1);
-	if (!result)
+	convert_return = malloc(sizeof(char) * length + 1);
+	if (!convert_return)
 		return (0);
-	result[length] = '\0';
+	convert_return[length] = '\0';
 	i = length - 1;
 	if (x == 0)
-		result[0] = '0';
+		convert_return[0] = '0';
 	while(x > 0)
 	{
-		result[i] = hex[x % 16];
+		convert_return[i] = hex[x % 16];
 		x /= 16;
 		i--;
 	}
-	return (result);
+	return (convert_return);
 }
 
 char	*putptr(unsigned long x)
@@ -107,66 +105,66 @@ char	*putptr(unsigned long x)
 	int		length;
 	int		i;
 	char	*hex;
-	char	*result;
+	char	*convert_return;
 
 	hex = "0123456789abcdef";
 	length = length_of_hex(x) + 2;
-	result = malloc(sizeof(char) * length + 1);
-	if(!result)
+	convert_return = malloc(sizeof(char) * length + 1);
+	if(!convert_return)
 		return (0);
-	result[0] = '0';
-	result[1] = 'x';
-	result[length] = '\0';
+	convert_return[0] = '0';
+	convert_return[1] = 'x';
+	convert_return[length] = '\0';
 	if (!x)
-		result[2] = '0';
+		convert_return[2] = '0';
 	i = length - 1;
 	while(x > 0)
 	{
-		result[i] = hex[x % 16];
+		convert_return[i] = hex[x % 16];
 		x /= 16;
 		i--;
 	}
-	return (result);
+	return (convert_return);
 }
 
 char	*putstr(char format_specifier, va_list args)
 {
-	char *string;
+	char *convert_return;
 
 	if(format_specifier == 'c')
 	{
-		string = malloc(sizeof(char) + 1);
-		string[0] = (char)va_arg(args, int);
-		string[1] = '\0';
+		convert_return = malloc(sizeof(char) + 1);
+		convert_return[0] = va_arg(args, int);
+		convert_return[1] = '\0';
 	}
 	else if(format_specifier == 's')
 	{
-		string = (va_arg(args, char *));
+		convert_return = (va_arg(args, char *));
 	}
-	return (string);
+	return (convert_return);
 }
 
 char	*putnbr_unsigned(unsigned int x)
 {
 	int	length;
 	int	i;
-	char *result;
+	char *convert_return;
 
 	length = length_of_integer(x);
 	i = length - 1;
-	result = malloc(sizeof(char) * length + 1);
-	if (!result)
+	convert_return = malloc(sizeof(char) * length + 1);
+	if (!convert_return)
 		return 0;
-	result[length] = '\0';
+	convert_return[length] = '\0';
 	if (x == 0)
-		result[0] = '0';
+		convert_return[0] = '0';
 	while(x > 0)
 	{
-		result[i] = (x % 10) + '0';
+		convert_return[i] = (x % 10) + '0';
 		x /= 10;
 		i--;
 	}
-	return (result);
+	return (convert_return);
 }
 
 // bonus utils
