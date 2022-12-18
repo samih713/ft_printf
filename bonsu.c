@@ -140,10 +140,7 @@ int	parse(const char **format_string, va_list args, t_flag *formating)
 	else if (formating->show_positive)
 		length += 1;
 	formating->string = convert_specifier(**format_string, args);
-	if (formating->string)
-		formating->string_length = ft_strlen(formating->string);
-	else
-		formating->string_length = 1;
+	formating->string_length = ft_strlen(formating->string);
 	pad = create_padding(formating);
 	if (formating->width > (formating->string_length + length)) 
 		//better use calloc when using it to cat as the string might not be empty and you might cat + junk values
