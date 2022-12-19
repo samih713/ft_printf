@@ -140,6 +140,11 @@ char	*putstr(char format_specifier, va_list args)
 	else if(format_specifier == 's')
 	{
 		convert_return = (va_arg(args, char *));
+		if(!convert_return[0])
+		{
+			convert_return = malloc(1);
+			convert_return[0] = '\0';
+		}
 	}
 	return (convert_return);
 }
@@ -171,7 +176,7 @@ char	*putnbr_unsigned(unsigned int x)
 
 int	is_numeric(char c)
 {
-	if (c <= '9' && c >= '1') // between 1 and 9 as 0 is for justifying with 0's
+	if (c <= '9' && c >= '0') // between 1 and 9 as 0 is for justifying with 0's
 		return (1);
 	return (0); 
 }

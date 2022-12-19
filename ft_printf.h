@@ -32,9 +32,9 @@ char	*puthex(unsigned int x, char upper_lower_case);
 char	*putptr(unsigned long x);
 
 // utilies
-int	ft_strlen(const char *string);
-int	length_of_integer(int x);
-int	length_of_hex(unsigned long int x);
+int		ft_strlen(const char *string);
+int		length_of_integer(int x);
+int		length_of_hex(unsigned long int x);
 
 // bonus
 typedef int BOOL;

@@ -21,39 +21,24 @@ int	is_flag_numeric(const char **format_string, t_flag *formating)
 
 	flags = "-.0# +"; 
 	r = 0;
-	while (*flags)
+	while (*flags && (!formating->precision_value && !formating->width))
 	{
 		if (*flags == **format_string)
 			return (1);
 		flags++;
 	}	
-    while(is_numeric(**format_string))
+    if(is_numeric(**format_string))
     {	
 		r = 1;
         if (formating->precision)
         {
             formating->precision_value *= 10;
             formating->precision_value += **format_string - '0';
-			if(*((*format_string) + 1) && *((*format_string) + 1) == '0')
-			{
-				formating->precision_value *= 10;
-				(*format_string)++;
-			}
-			else
-				(*format_string)++;
-
         }
         else
         {
             formating->width *= 10;
             formating->width += **format_string - '0';
-			if(*((*format_string) + 1) && *((*format_string) + 1) == '0')
-			{
-				formating->width *= 10;
-				(*format_string)++;
-			}
-			else
-				(*format_string)++;
         }
     }
 	return (r);	
@@ -100,12 +85,11 @@ t_flag *init_strct(const char **format_string)
     formating = (t_flag *)malloc(sizeof(t_flag));
     if (!formating)
         return (NULL);  
-    // can be shortened if all are initiated to these default values formating =(t_list){false, 0, 1, ...}
     formating->width = 0;
     formating->precision_value = 0;
 	formating->padding = ' ';
 	formating->precision = false;
-    formating->show_positive = 0; // make sure to use as ! if nothing is specified
+    formating->show_positive = 0;
     formating->left_justify = false;
 	formating->hash = 0;
 	formating->string = NULL;
@@ -130,50 +114,41 @@ t_flag *init_strct(const char **format_string)
 
 int	parse(const char **format_string, va_list args, t_flag *formating) 
 {
-	char	*result;
 	char	*pad;
 	int		length; 
 
 	length = 0;
-	if (formating->hash)
-		length += 2;
-	else if (formating->show_positive)
-		length += 1;
 	formating->string = convert_specifier(**format_string, args);
-	formating->string_length = ft_strlen(formating->string);
-	pad = create_padding(formating);
-	if (formating->width > (formating->string_length + length)) 
-		//better use calloc when using it to cat as the string might not be empty and you might cat + junk values
-		result = (char *)calloc(formating->width + 1 ,sizeof(char)); 
+	if (!formating->string[0] && **format_string == 'c')
+		formating->string_length = 1;
 	else
-		result = (char *)calloc(formating->string_length + length + 1 ,sizeof(char));
-	if (!result)
-		return 0;
+		formating->string_length = ft_strlen(formating->string);
+	pad = create_padding(formating);
 	if (formating->left_justify)
 	{
-		if (formating->show_positive)
-			strncat(result, formating->show_positive , 1);
-		else if (formating->hash)
-			strncat(result, "0x", 3);
-		strncat(result, formating->string, formating->string_length);
-		strncat(result, pad, ft_strlen(pad));
+		if (formating->show_positive && (**format_string != 'x' || **format_string != 'X'))
+			length += write(1, formating->show_positive , 1);
+		if (formating->hash && **format_string == 'x')
+			length += write(1, "0x", 2);
+		else if (formating->hash && **format_string == 'X')
+			length += write(1, "0X", 2);
+		length += write(1, formating->string, formating->string_length); // if c is null string_length is 0
+		length += write(1, pad, ft_strlen(pad));
 	}
 	else
 	{
-		if (formating->hash)
-			strncat(result, "0x", 3);
-		strncat(result, pad, ft_strlen(pad));
-		if (formating->show_positive)
-			strncat(result, formating->show_positive , 1);
-		strncat(result, formating->string, formating->string_length);
+		if (formating->hash && **format_string == 'x')
+			length += write(1, "0x", 2);
+		else if (formating->hash && **format_string == 'X')
+			length += write(1, "0X", 2);
+		length += write(1, pad, ft_strlen(pad));
+		if (formating->show_positive && !formating->hash)
+			length += write(1, formating->show_positive , 1);
+		length += write(1, formating->string, formating->string_length);
 	}
 	if (pad)
 		free(pad);
 	if (formating->string)
 		free(formating->string);
-	length = ft_strlen(result);
-	write(1, result, length);
-	if (result)
-		free(result);
 	return (length);
 }

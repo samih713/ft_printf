@@ -13,7 +13,7 @@
 /*
 [to-do] fix c when passed as 0
 [to-do] Free
-[to-do] add ft_calloc and ft_strncat
+[to-do] add ft_calloc
 [to-do] Fix # with uppercase X should show 0X
 [to-do] Precision
 [to-do] run testers
@@ -75,14 +75,8 @@ char	*convert_specifier(char format_specifier, va_list args) // all should retur
 	return (convert_return);
 }
 
-/* #include <stdio.h>
-
-int main(void)
+/* int main(void)
 {
-	ft_printf("%c", 0);
-	//ft_printf(" %c %c %c \n", '0', 0, '1');
-	//printf(" %c %c %c \n", '0', 0, '1');
-	//b = printf("%5xHello so my name is the mane with the plan and i got 20%x\n\n", x, ptr);
-
-	//printf("%d--%d", a, b);
+	ft_printf("%s", "");
+	// printf("%s", "");
 } */
