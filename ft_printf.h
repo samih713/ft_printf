@@ -26,14 +26,15 @@ char	*convert_specifier(char format_specifier, va_list args);
 
 // put
 char	*putnbr(int x);
-char	*putstr(char format_specifier, va_list args);
+char	*putstr(char *string);
+char	*putchr(int c);
 char	*putnbr_unsigned(unsigned int x);
 char	*puthex(unsigned int x, char upper_lower_case);
 char	*putptr(unsigned long x);
 
 // utilies
 int		ft_strlen(const char *string);
-int		length_of_integer(int x);
+int		length_of_integer(long int x);
 int		length_of_hex(unsigned long int x);
 
 // bonus

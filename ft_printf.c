@@ -59,9 +59,9 @@ char	*convert_specifier(char format_specifier, va_list args) // all should retur
 
 	convert_return = NULL;
 	if(format_specifier == 'c')
-		convert_return = putstr(format_specifier, args);
+		convert_return = putchr(va_arg(args, int));
 	else if(format_specifier == 's')
-		convert_return = putstr(format_specifier, args);
+		convert_return = putstr(va_arg(args, char *));
 	if (format_specifier == 'd' || format_specifier == 'i')
 		convert_return = putnbr(va_arg(args, int));
 	else if (format_specifier == 'u')
@@ -71,12 +71,16 @@ char	*convert_specifier(char format_specifier, va_list args) // all should retur
 	else if (format_specifier == 'p')
 		convert_return = putptr(va_arg(args, unsigned long));
 	else if (format_specifier == '%')
-		convert_return = "%";
+	{
+		convert_return = malloc(2);
+		convert_return[0] = '%';
+		convert_return[1] = '\0';
+	}
 	return (convert_return);
 }
 
 /* int main(void)
 {
-	ft_printf("%s", "");
-	// printf("%s", "");
+	ft_printf(" %-10d %+3d\n", 66, 77);
+	printf(" %-10d %+3d\n", 66, 77);
 } */

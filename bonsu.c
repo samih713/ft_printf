@@ -92,7 +92,7 @@ t_flag *init_strct(const char **format_string)
     formating->show_positive = 0;
     formating->left_justify = false;
 	formating->hash = 0;
-	formating->string = NULL;
+	formating->string = "(NULL)";
 	while(is_flag_numeric(format_string, formating))
 	{
 		if (!(formating->left_justify) && **format_string == '0')
@@ -148,7 +148,6 @@ int	parse(const char **format_string, va_list args, t_flag *formating)
 	}
 	if (pad)
 		free(pad);
-	if (formating->string)
-		free(formating->string);
+	free(formating->string);
 	return (length);
 }
