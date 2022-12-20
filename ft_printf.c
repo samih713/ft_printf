@@ -11,12 +11,11 @@
 /* ************************************************************************** */
 
 /*
-[to-do] fix c when passed as 0
-[to-do] Free
-[to-do] add ft_calloc
-[to-do] Fix # with uppercase X should show 0X
+[to-do] check for illegal functions (calloc ...etc)
 [to-do] Precision
-[to-do] run testers
+[to-do] run bonus testers
+[to-do] variable and function naming, (clear and systematic)
+[to-do] readme
  */
 #include "ft_printf.h"
 
@@ -24,13 +23,13 @@ char	*convert_specifier(char format_specifier, va_list args);
 
 int	ft_printf(const char *format_string, ...)
 {
-	va_list args;
-	int print_return;
-	t_flag *formating;
+	va_list	args;
+	int		print_return;
+	t_flag	*formating;
 
 	print_return = 0;
 	va_start(args, format_string);
-	while(*format_string)
+	while (*format_string)
 	{
 		if (*format_string == '%')
 		{
@@ -40,8 +39,8 @@ int	ft_printf(const char *format_string, ...)
 			format_string++;
 			free(formating);
 		}
-		else if(!*format_string)
-			return(print_return);
+		else if (!*format_string)
+			return (print_return);
 		else
 		{
 			write(1, format_string, 1);
@@ -81,6 +80,6 @@ char	*convert_specifier(char format_specifier, va_list args) // all should retur
 
 /* int main(void)
 {
-	ft_printf(" %-10d %+3d\n", 66, 77);
-	printf(" %-10d %+3d\n", 66, 77);
+	ft_printf(" %p %p ", 0, 0);
+	printf(" %p %p ", 0, 0);
 } */

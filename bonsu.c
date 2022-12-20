@@ -44,7 +44,6 @@ int	is_flag_numeric(const char **format_string, t_flag *formating)
 	return (r);	
 }
 
-//create the padding string
 char	*create_padding(t_flag *formating) 
 {
 	char	*pad;

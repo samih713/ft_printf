@@ -13,6 +13,7 @@
 
 #include "ft_printf.h"
 
+// utils
 int	ft_strlen(const char *string)
 {
 	int	i;
@@ -43,6 +44,7 @@ int	length_of_hex(unsigned long int x)
 		return (1 + length_of_hex(x / 16));
 }
 
+// puts
 char	*putnbr(int x)
 {
 	int		length;
@@ -108,26 +110,35 @@ char	*puthex(unsigned int x, char upper_lower_case)
 char	*putptr(unsigned long x)
 {
 	int		length;
-	int		i;
 	char	*hex;
 	char	*convert_return;
-
+	char	*nil;
 	hex = "0123456789abcdef";
+	length = 0;
+	if (!x)
+	{
+		nil = "(nil)";
+		convert_return = malloc(sizeof(char) * 6);
+		if (!convert_return)
+			return (0);
+		while(*nil)
+			convert_return[length++] = *(nil++);
+		convert_return[length] = '\0';
+		return (convert_return);
+	}
 	length = length_of_hex(x) + 2;
 	convert_return = malloc(sizeof(char) * length + 1);
 	if(!convert_return)
 		return (0);
 	convert_return[0] = '0';
 	convert_return[1] = 'x';
-	convert_return[length] = '\0';
+	convert_return[length--] = '\0';
 	if (!x)
 		convert_return[2] = '0';
-	i = length - 1;
 	while(x > 0)
 	{
-		convert_return[i] = hex[x % 16];
+		convert_return[length--] = hex[x % 16];
 		x /= 16;
-		i--;
 	}
 	return (convert_return);
 }
@@ -189,7 +200,6 @@ char	*putnbr_unsigned(unsigned int x)
 }
 
 // bonus utils
-
 int	is_numeric(char c)
 {
 	if (c <= '9' && c >= '0') // between 1 and 9 as 0 is for justifying with 0's
