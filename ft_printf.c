@@ -13,7 +13,8 @@
 /*
 [to-do] check for illegal functions (calloc ...etc)
 [to-do] Precision
-[to-do] run bonus testers
+[to-do] fix bonus testers
+[to-do] make a better makefile plx
 [to-do] variable and function naming, (clear and systematic)
 [to-do] readme
  */
@@ -80,6 +81,6 @@ char	*convert_specifier(char format_specifier, va_list args) // all should retur
 
 /* int main(void)
 {
-	ft_printf(" %p %p ", 0, 0);
-	printf(" %p %p ", 0, 0);
+	ft_printf(" % d \n", -1);
+	printf(" % d \n", -1);
 } */

@@ -17,6 +17,8 @@ SRCS = support.c ft_printf.c bonsu.c
 
 OBJS = $(SRCS:.c=.o)
 
+BONUS = $(SRCS:.c=.o)
+
 RM = rm -f
 
 NAME = libftprintf.a
@@ -26,6 +28,9 @@ all: $(NAME) # the first and default target to run, can be used to ensure that m
 
 $(NAME): $(OBJS) # $@ is automatic variable (shortcut) contains the target name 'libft.a'
 	ar rcs $@ $(OBJS)
+
+bonus: $(NAME) # make a better bonus rule plx
+
 # man ar (r-make into single, c-if doesnt exist create)
 # ar rcs is the most common when compiling library
 

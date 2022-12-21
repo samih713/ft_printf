@@ -53,6 +53,7 @@ typedef struct s_flag
 	int		width;
 	char	*string;
 	int		string_length;
+	char	sign;
 }	t_flag;
 
 

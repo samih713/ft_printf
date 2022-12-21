@@ -102,7 +102,7 @@ t_flag *init_strct(const char **format_string)
 			formating->hash = true;
 		else if (formating->show_positive == 0 && **format_string == '+')
 			formating->show_positive = "+";
-		else if (formating->show_positive == 0 &&**format_string == ' ')
+		else if (formating->show_positive == 0 && **format_string == ' ')
 			formating->show_positive = " ";
 		else if (**format_string == '.')
 			formating->precision = true;
@@ -115,9 +115,14 @@ int	parse(const char **format_string, va_list args, t_flag *formating)
 {
 	char	*pad;
 	int		length; 
+	int		sign;
 
+	sign = 0;
 	length = 0;
 	formating->string = convert_specifier(**format_string, args);
+	// space is treated as show positive while it should be ignored for c and s flags
+	if (**format_string == 'c' || **format_string == 's' || formating->string[0] == '-') 
+		formating->show_positive = 0;
 	if (!formating->string[0] && **format_string == 'c')
 		formating->string_length = 1;
 	else
@@ -136,14 +141,20 @@ int	parse(const char **format_string, va_list args, t_flag *formating)
 	}
 	else
 	{
-		if (formating->hash && **format_string == 'x')
+		if(formating->string[0] == '-')
+		{
+			length += write(1, &formating->string[0], 1);
+			sign++;
+			formating->string_length--;
+		}
+		if (formating->hash && **format_string == 'x' && formating->string[0] != '0')
 			length += write(1, "0x", 2);
-		else if (formating->hash && **format_string == 'X')
+		else if (formating->hash && **format_string == 'X' && formating->string[0] != '0')
 			length += write(1, "0X", 2);
 		length += write(1, pad, ft_strlen(pad));
 		if (formating->show_positive && !formating->hash)
 			length += write(1, formating->show_positive , 1);
-		length += write(1, formating->string, formating->string_length);
+		length += write(1, formating->string + sign, formating->string_length); // to start the string 1 char if [0] is -
 	}
 	if (pad)
 		free(pad);
