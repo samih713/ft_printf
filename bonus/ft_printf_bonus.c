@@ -11,10 +11,10 @@
 /* ************************************************************************** */
 
 /*
+[to-do] check for illegal functions (calloc ...etc)
+[to-do] Precision
 [to-do] make a better makefile plx
 [to-do] variable and function naming, (clear and systematic)
-[to-do] clean up go line by line
-[to-do] split up parse with static functions to left justify and not
 [to-do] check 2 more testers
 [to-do] readme
  */
@@ -79,3 +79,11 @@ char	*convert_specifier(char format_specifier, va_list args) // all should retur
 	return (convert_return);
 }
 
+/* int main(void)
+{
+	int a, b;
+	a = ft_printf("ft_result: %.s (end) \n", "-");
+	b = printf("xx_result: %.s (end) \n", "-");
+
+	printf("ft_print value:%d\nxx_printf value:%d\n", a,b);
+} */

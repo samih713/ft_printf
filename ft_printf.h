@@ -17,9 +17,7 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <limits.h>
-#include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 int		ft_printf(const char *format_string, ...);
 char	*convert_specifier(char format_specifier, va_list args);

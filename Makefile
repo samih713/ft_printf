@@ -15,22 +15,24 @@ CFLAGS = -Wall -Werror -Wextra
 
 SRCS = support.c ft_printf.c bonsu.c
 
+BSRCS = support_bonus.c ft_printf_bonus.c bonsu_bonus.c
+
 OBJS = $(SRCS:.c=.o)
 
-BONUS = $(SRCS:.c=.o)
+BOBJS = $(BSRCS:.c=.o)
 
 RM = rm -f
 
 NAME = libftprintf.a
 
 all: $(NAME) # the first and default target to run, can be used to ensure that multiple
-#              targets are run before it runss (pre-requisite)
+#              targets are run before it runs (pre-requisite)
 
 $(NAME): $(OBJS) # $@ is automatic variable (shortcut) contains the target name 'libft.a'
 	ar rcs $@ $(OBJS)
 
-bonus: $(NAME) # make a better bonus rule plx
-
+bonus: $(BOBJS) # make a better bonus rule plx
+	ar rcs $(NAME) $(BOBJS)
 # man ar (r-make into single, c-if doesnt exist create)
 # ar rcs is the most common when compiling library
 
@@ -38,7 +40,7 @@ bonus: $(NAME) # make a better bonus rule plx
 # 	ar rcs $@ $(NAME)
 
 clean: # not default (first) and not a pre-requisite anywhere else
-	$(RM) $(OBJS)
+	$(RM) $(OBJS) $(BOBJS)
 # clean won't run unless specifically called
 # clean isn't inteded to be a file name -> therefore defined in .PHONY
 

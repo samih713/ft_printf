@@ -181,4 +181,3 @@ int	parse(const char **format_string, va_list args, t_flag *formating)
 	free(formating->string);
 	return (length);
 }
-
