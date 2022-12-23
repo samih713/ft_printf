@@ -14,7 +14,7 @@
 [to-do] make a better makefile plx
 [to-do] variable and function naming, (clear and systematic)
 [to-do] clean up go line by line
-[to-do] split up parse with static functions to left justify and not
+[to-do] better way to initialize the struct
 [to-do] check 2 more testers
 [to-do] readme
  */
