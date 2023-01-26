@@ -49,13 +49,13 @@ int	parse(const char **fstr, va_list args, t_flag *f)
 	char	*pad;
 
 	pr = 0;
-	f->string = convert_specifier(**fstr, args);
-	if (**fstr == 'c' || **fstr == 's' || f->string[0] == '-')
+	f->str = convert_specifier(**fstr, args);
+	if (**fstr == 'c' || **fstr == 's' || f->str[0] == '-')
 		f->show_positive = 0;
-	if (!f->string[0] && **fstr == 'c')
-		f->string_length = 1;
+	if (!f->str[0] && **fstr == 'c')
+		f->sl = 1;
 	else
-		f->string_length = ft_strlen(f->string);
+		f->sl = ft_strlen(f->str);
 	pad = create_padding(f);
 	if (f->left_justify)
 		pr = left_justify(f, fstr, pad, pr);
@@ -63,8 +63,8 @@ int	parse(const char **fstr, va_list args, t_flag *f)
 		pr = right_justify(f, fstr, pad, pr);
 	if (pad)
 		free(pad);
-	if (f->string)
-		free(f->string);
+	if (f->str)
+		free(f->str);
 	return (pr);
 }
 
@@ -77,48 +77,46 @@ static int	left_justify(t_flag *f, const char **fstr, char *pad, int pr)
 	else if (f->hash && **fstr == 'X')
 		pr += write(1, "0X", 2);
 	if (**fstr == 's' && f->precision)
-		pr += write(1, f->string, f->p_value);
+		pr += write(1, f->str, f->p_value);
 	else if (**fstr != 's')
 	{
-		f->p_value = f->p_value - f->string_length;
+		f->p_value = f->p_value - f->sl;
 		while ((f->p_value)-- > 0)
 			pr += write(1, "0", 1);
-		pr += write(1, f->string, f->string_length);
+		pr += write(1, f->str, f->sl);
 	}
 	else
-		pr += write(1, f->string, f->string_length);
+		pr += write(1, f->str, f->sl);
 	pr += write(1, pad, ft_strlen(pad));
 	return (pr);
 }
 
 static int	right_justify(t_flag *f, const char **fstr, char *pad, int pr)
 {
-	int	sign;
-
-	sign = (f->string[0] == '-' && **fstr != 's');
-	if (sign)
+	if ((f->str[0] == '-' && **fstr != 's'))
 	{
-		pr += write(1, f->string, 1);
-		f->string_length--;
+		pr += write(1, f->str, 1);
+		f->sl--;
 	}
-	if (f->hash && **fstr == 'x' && f->string[0] != '0')
+	if (f->hash && **fstr == 'x' && f->str[0] != '0')
 		pr += write(1, "0x", 2);
-	else if (f->hash && **fstr == 'X' && f->string[0] != '0')
+	else if (f->hash && **fstr == 'X' && f->str[0] != '0')
 		pr += write(1, "0X", 2);
 	pr += write(1, pad, ft_strlen(pad));
 	if (f->show_positive && !f->hash)
 		pr += write(1, f->show_positive, 1);
-	if (**fstr == 's' && f->precision && (f->p_value < f->string_length))
-		pr += write(1, f->string + sign, f->p_value);
+	if (**fstr == 's' && f->precision && (f->p_value < f->sl))
+		pr += write(1, f->str
+				+ (f->str[0] == '-' && **fstr != 's'), f->p_value);
 	else if (**fstr != 's')
 	{
-		f->p_value = f->p_value - f->string_length;
+		f->p_value = f->p_value - f->sl;
 		while ((f->p_value)-- > 0)
 			pr += write(1, "0", 1);
-		pr += write(1, f->string + sign, f->string_length);
+		pr += write(1, f->str + (f->str[0] == '-' && **fstr != 's'), f->sl);
 	}
 	else
-		pr += write(1, f->string, f->string_length);
+		pr += write(1, f->str, f->sl);
 	return (pr);
 }
 
@@ -129,7 +127,7 @@ static char	*create_padding(t_flag *f)
 
 	size = 0;
 	if (f->width)
-		size = f->width - f->string_length;
+		size = f->width - f->sl;
 	if (f->hash)
 		size -= 2;
 	else if (f->show_positive)

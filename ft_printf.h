@@ -19,8 +19,8 @@
 #include <limits.h>
 #include <stdlib.h>
 
-int		ft_printf(const char *fstr, ...);
-char	*convert_specifier(char format_specifier, va_list args);
+int		ft_printf(const char *format_string, ...);
+char	*convert_specifier(char format_specifier, va_list arguments);
 
 // put
 char	*putnbr(long int x);
@@ -47,17 +47,17 @@ typedef struct s_flag
 	int		p_value;
 	char	padding;
 	int		width;
-	char	*string;
-	int		string_length;
+	char	*str;
+	int		sl;
 	char	sign;
 }	t_flag;
 // bonus utils
 char	*putchr(int c);
-int		is_flag_numeric(const char **fstr, t_flag *formating);
-void	defaults(t_flag *f);
+int		is_flag_numeric(const char **format_string, t_flag *formating);
+void	defaults(t_flag *formating);
 
 int	is_numeric(char c);
-t_flag *init_strct(const char **fstr);
-int	parse(const char **fstr, va_list args, t_flag *formating);
+t_flag *init_strct(const char **format_string);
+int	parse(const char **format_string, va_list arguments, t_flag *formating);
 
 #endif

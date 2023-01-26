@@ -22,7 +22,7 @@ char	*putchr(int c)
 	return (convert_return);
 }
 
-int	is_flag_numeric(const char **format_string, t_flag *formating)
+int	is_flag_numeric(const char **fstr, t_flag *formating)
 {
 	char	*flags;
 	int		r;
@@ -31,21 +31,21 @@ int	is_flag_numeric(const char **format_string, t_flag *formating)
 	r = 0;
 	while (*flags && (!formating->p_value && !formating->width))
 	{
-		if (*flags++ == **format_string)
+		if (*flags++ == **fstr)
 			return (1);
 	}
-	if (is_numeric(**format_string))
+	if (is_numeric(**fstr))
 	{
 		r = 1;
 		if (formating->precision)
 		{
 			formating->p_value *= 10;
-			formating->p_value += **format_string - '0';
+			formating->p_value += **fstr - '0';
 		}
 		else
 		{
 			formating->width *= 10;
-			formating->width += **format_string - '0';
+			formating->width += **fstr - '0';
 		}
 	}
 	return (r);
@@ -60,6 +60,6 @@ void	defaults(t_flag *f)
 	f->show_positive = 0;
 	f->left_justify = false;
 	f->hash = 0;
-	f->string = "(NULL)";
+	f->str = "(NULL)";
 }
 
