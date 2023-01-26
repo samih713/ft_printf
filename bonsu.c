@@ -5,143 +5,134 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sabdelra <sabdelra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/11 16:08:48 by sabdelra          #+#    #+#             */
-/*   Updated: 2022/12/11 20:22:03 by sabdelra         ###   ########.fr       */
+/*   Created: 2023/01/26 17:22:57 by sabdelra          #+#    #+#             */
+/*   Updated: 2023/01/26 22:21:37 by sabdelra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "ft_printf.h"
 
-static int	left_justify(t_flag *formating, const char **format_string, char *pad, int print_return);
-static int	right_justify(t_flag *formating, const char **format_string, char *pad, int print_return);
-static char	*create_padding(t_flag *formating);
-static int	is_flag_numeric(const char **format_string, t_flag *formating);
+static int	left_justify(t_flag *f, const char **fstr, char *pad, int pr);
+static int	right_justify(t_flag *f, const char **fstr, char *pad, int pr);
+static char	*create_padding(t_flag *f);
 
-t_flag *init_strct(const char **format_string)
+t_flag	*init_strct(const char **fstr)
 {
-	t_flag *formating;
+	t_flag	*f;
 
-    formating = (t_flag *)malloc(sizeof(t_flag));
-    if (!formating)
-        return (NULL);
-    formating->width = 0;
-	formating->padding = ' ';
-    formating->precision_value = 0;
-	formating->precision = false;
-    formating->show_positive = 0;
-    formating->left_justify = false;
-	formating->hash = 0;
-	formating->string = "(NULL)";
-	while(is_flag_numeric(format_string, formating))
+	f = malloc(sizeof(t_flag));
+	if (!f)
+		return (NULL);
+	defaults(f);
+	while (is_flag_numeric(fstr, f))
 	{
-		if (!(formating->left_justify) && **format_string == '0')
-			formating->padding = '0';	
-		else if (formating->padding != '0' && **format_string == '-')
-			formating->left_justify = true;
-		else if (**format_string == '#')
-			formating->hash = true;
-		else if (formating->show_positive == 0 && **format_string == '+')
-			formating->show_positive = "+";
-		else if (formating->show_positive == 0 && **format_string == ' ')
-			formating->show_positive = " ";
-		else if (**format_string == '.')
-			formating->precision = true;
-		(*format_string)++;
+		if (!(f->left_justify) && **fstr == '0')
+			f->padding = '0';
+		else if (f->padding != '0' && **fstr == '-')
+			f->left_justify = true;
+		else if (**fstr == '#')
+			f->hash = true;
+		else if (f->show_positive == 0 && **fstr == '+')
+			f->show_positive = "+";
+		else if (f->show_positive == 0 && **fstr == ' ')
+			f->show_positive = " ";
+		else if (**fstr == '.')
+			f->precision = true;
+		(*fstr)++;
 	}
-	return(formating);
+	return (f);
 }
 
-int	parse(const char **format_string, va_list args, t_flag *formating) 
+int	parse(const char **fstr, va_list args, t_flag *f)
 {
-	int		print_return; 
+	int		pr;
 	char	*pad;
 
-	print_return = 0;
-	formating->string = convert_specifier(**format_string, args);
-	if (**format_string == 'c' || **format_string == 's' || formating->string[0] == '-') 
-		formating->show_positive = 0;
-	if (!formating->string[0] && **format_string == 'c')
-		formating->string_length = 1;
+	pr = 0;
+	f->string = convert_specifier(**fstr, args);
+	if (**fstr == 'c' || **fstr == 's' || f->string[0] == '-')
+		f->show_positive = 0;
+	if (!f->string[0] && **fstr == 'c')
+		f->string_length = 1;
 	else
-		formating->string_length = ft_strlen(formating->string);
-	pad = create_padding(formating);
-	if (formating->left_justify)
-		print_return = left_justify(formating, format_string, pad, print_return);
+		f->string_length = ft_strlen(f->string);
+	pad = create_padding(f);
+	if (f->left_justify)
+		pr = left_justify(f, fstr, pad, pr);
 	else
-		print_return = right_justify(formating, format_string, pad, print_return);
+		pr = right_justify(f, fstr, pad, pr);
 	if (pad)
 		free(pad);
-	free(formating->string);
-	return (print_return);
+	if (f->string)
+		free(f->string);
+	return (pr);
 }
 
-static int	left_justify(t_flag *formating, const char **format_string, char *pad, int print_return)
+static int	left_justify(t_flag *f, const char **fstr, char *pad, int pr)
 {
-	if (formating->show_positive && (**format_string != 'x' || **format_string != 'X'))
-			print_return += write(1, formating->show_positive , 1);
-	if (formating->hash && **format_string == 'x')
-		print_return += write(1, "0x", 2);
-	else if (formating->hash && **format_string == 'X')
-		print_return += write(1, "0X", 2);
-	if (**format_string == 's' && formating->precision)
-		print_return += write(1, formating->string, formating->precision_value); 
-	else if (**format_string != 's')
+	if (f->show_positive && (**fstr != 'x' || **fstr != 'X'))
+		pr += write(1, f->show_positive, 1);
+	if (f->hash && **fstr == 'x')
+		pr += write(1, "0x", 2);
+	else if (f->hash && **fstr == 'X')
+		pr += write(1, "0X", 2);
+	if (**fstr == 's' && f->precision)
+		pr += write(1, f->string, f->p_value);
+	else if (**fstr != 's')
 	{
-		formating->precision_value = formating->precision_value - formating->string_length;
-		while ((formating->precision_value)-- > 0)
-			print_return += write(1, "0", 1);
-		print_return += write(1, formating->string, formating->string_length); 
+		f->p_value = f->p_value - f->string_length;
+		while ((f->p_value)-- > 0)
+			pr += write(1, "0", 1);
+		pr += write(1, f->string, f->string_length);
 	}
 	else
-		print_return += write(1, formating->string, formating->string_length); 
-	print_return += write(1, pad, ft_strlen(pad));
-	return (print_return);
+		pr += write(1, f->string, f->string_length);
+	pr += write(1, pad, ft_strlen(pad));
+	return (pr);
 }
 
-static int	right_justify(t_flag *formating, const char **format_string, char *pad, int print_return)
+static int	right_justify(t_flag *f, const char **fstr, char *pad, int pr)
 {
-	int		sign;
+	int	sign;
 
-	sign = 0;
-	if(formating->string[0] == '-' && **format_string != 's')
+	sign = (f->string[0] == '-' && **fstr != 's');
+	if (sign)
 	{
-		print_return += write(1, &formating->string[0], 1);
-		sign++;
-		formating->string_length--;
+		pr += write(1, f->string, 1);
+		f->string_length--;
 	}
-	if (formating->hash && **format_string == 'x' && formating->string[0] != '0')
-		print_return += write(1, "0x", 2);
-	else if (formating->hash && **format_string == 'X' && formating->string[0] != '0')
-		print_return += write(1, "0X", 2);
-	print_return += write(1, pad, ft_strlen(pad));
-	if (formating->show_positive && !formating->hash)
-		print_return += write(1, formating->show_positive , 1);
-	if (**format_string == 's' && formating->precision && (formating->precision_value < formating->string_length))
-		print_return += write(1, formating->string + sign, formating->precision_value);
-	else if (**format_string != 's')
+	if (f->hash && **fstr == 'x' && f->string[0] != '0')
+		pr += write(1, "0x", 2);
+	else if (f->hash && **fstr == 'X' && f->string[0] != '0')
+		pr += write(1, "0X", 2);
+	pr += write(1, pad, ft_strlen(pad));
+	if (f->show_positive && !f->hash)
+		pr += write(1, f->show_positive, 1);
+	if (**fstr == 's' && f->precision && (f->p_value < f->string_length))
+		pr += write(1, f->string + sign, f->p_value);
+	else if (**fstr != 's')
 	{
-		formating->precision_value = formating->precision_value - formating->string_length;
-		while ((formating->precision_value)-- > 0)
-			print_return += write(1, "0", 1);
-		print_return += write(1, formating->string + sign, formating->string_length); 	
+		f->p_value = f->p_value - f->string_length;
+		while ((f->p_value)-- > 0)
+			pr += write(1, "0", 1);
+		pr += write(1, f->string + sign, f->string_length);
 	}
 	else
-		print_return += write(1, formating->string, formating->string_length);
-	return (print_return);
+		pr += write(1, f->string, f->string_length);
+	return (pr);
 }
 
-static char	*create_padding(t_flag *formating)
+static char	*create_padding(t_flag *f)
 {
 	char	*pad;
 	int		size;
 
 	size = 0;
-	if (formating->width)
-		size = formating->width - formating->string_length; 
-	if (formating->hash)									
+	if (f->width)
+		size = f->width - f->string_length;
+	if (f->hash)
 		size -= 2;
-	else if (formating->show_positive)
+	else if (f->show_positive)
 		size -= 1;
 	if (size > 0)
 	{
@@ -156,37 +147,7 @@ static char	*create_padding(t_flag *formating)
 		return (pad);
 	}
 	pad[size--] = '\0';
-	while(size >= 0)
-		pad[size--] = formating->padding;
+	while (size >= 0)
+		pad[size--] = f->padding;
 	return (pad);
-}
-
-static int	is_flag_numeric(const char **format_string, t_flag *formating)
-{
-	char *flags;
-	int r;
-
-	flags = "-.0# +"; 
-	r = 0;
-	while (*flags && (!formating->precision_value && !formating->width))
-	{
-		if (*flags == **format_string)
-			return (1);
-		flags++;
-	}	
-    if(is_numeric(**format_string))
-    {	
-		r = 1;
-        if (formating->precision)
-        {
-            formating->precision_value *= 10;
-            formating->precision_value += **format_string - '0';
-        }
-        else
-        {
-            formating->width *= 10;
-            formating->width += **format_string - '0';
-        }
-    }
-	return (r);	
 }

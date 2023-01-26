@@ -3,19 +3,19 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sabdelra <sabdelra@student.42abudhabi.a    +#+  +:+       +#+         #
+#    By: sabdelra <sabdelra@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/09 01:58:20 by sabdelra          #+#    #+#              #
-#    Updated: 2022/12/09 01:58:20 by sabdelra         ###   ########.fr        #
+#    Updated: 2023/01/26 19:51:16 by sabdelra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g
 
-SRCS = support.c ft_printf.c bonsu.c
+SRCS = put.c utils.c ft_printf.c bonsu.c bonus_utils.c
 
-BSRCS = support.c ft_printf.c bonsu.c
+BSRCS = put.c utils.c ft_printf.c bonsu.c bonus_utils.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -46,3 +46,5 @@ clean: # not default (first) and not a pre-requisite anywhere else
 
 fclean:	clean # removes
 	$(RM) $(NAME)
+
+re: fclean all

@@ -6,69 +6,64 @@
 /*   By: sabdelra <sabdelra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 19:52:35 by sabdelra          #+#    #+#             */
-/*   Updated: 2022/12/11 19:23:38 by sabdelra         ###   ########.fr       */
+/*   Updated: 2023/01/26 22:41:40 by sabdelra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 [to-do] make a better makefile plx
-[to-do] variable and function naming, (clear and systematic)
-[to-do] clean up go line by line
 [to-do] better way to initialize the struct
-[to-do] check 2 more testers
+[to-do] testers
 [to-do] readme
  */
+
 #include "ft_printf.h"
 
 char	*convert_specifier(char format_specifier, va_list args);
 
-int	ft_printf(const char *format_string, ...)
+int	ft_printf(const char *fstr, ...)
 {
 	va_list	args;
-	int		print_return;
-	t_flag	*formating;
+	int		pr;
+	t_flag	*f;
 
-	print_return = 0;
-	va_start(args, format_string);
-	while (*format_string)
+	pr = 0;
+	va_start(args, fstr);
+	while (*fstr)
 	{
-		if (*format_string == '%')
+		if (*fstr == '%')
 		{
-			format_string++;
-			formating = init_strct(&format_string);
-			print_return += parse(&format_string, args, formating);
-			format_string++;
-			free(formating);
+			fstr++;
+			f = init_strct(&fstr);
+			pr += parse(&fstr, args, f);
+			fstr++;
+			free(f);
 		}
-		else if (!*format_string)
-			return (print_return);
+		else if (!*fstr)
+			return (pr);
 		else
-		{
-			write(1, format_string, 1);
-			format_string++;
-			print_return++;
-		}
+			pr += write(1, fstr++, 1);
 	}
 	va_end(args);
-	return (print_return);
+	return (pr);
 }
 
-char	*convert_specifier(char format_specifier, va_list args) // all should return strings
+char	*convert_specifier(char format_specifier, va_list args)
 {
 	char	*convert_return;
 
 	convert_return = NULL;
-	if(format_specifier == 'c')
+	if (format_specifier == 'c')
 		convert_return = putchr(va_arg(args, int));
-	else if(format_specifier == 's')
+	else if (format_specifier == 's')
 		convert_return = putstr(va_arg(args, char *));
 	if (format_specifier == 'd' || format_specifier == 'i')
 		convert_return = putnbr(va_arg(args, int));
 	else if (format_specifier == 'u')
 		convert_return = putnbr_unsigned(va_arg(args, unsigned int));
 	else if (format_specifier == 'x' || format_specifier == 'X')
-		convert_return = puthex(va_arg(args,unsigned int), format_specifier);
-	else if (format_specifier == 'p')
+		convert_return = puthex(va_arg(args, unsigned long), format_specifier);
+	else if (format_specifier == 'p' || format_specifier == 'P')
 		convert_return = putptr(va_arg(args, unsigned long));
 	else if (format_specifier == '%')
 	{
@@ -78,4 +73,3 @@ char	*convert_specifier(char format_specifier, va_list args) // all should retur
 	}
 	return (convert_return);
 }
-
