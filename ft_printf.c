@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabdelra <sabdelra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabdelra <sabdelra@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 19:52:35 by sabdelra          #+#    #+#             */
-/*   Updated: 2023/01/26 22:41:40 by sabdelra         ###   ########.fr       */
+/*   Updated: 2023/01/27 03:45:15 by sabdelra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*
 [to-do] make a better makefile plx
+[to-do] error functions
 [to-do] better way to initialize the struct
 [to-do] testers
 [to-do] readme
