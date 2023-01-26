@@ -3,19 +3,19 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sabdelra <sabdelra@student.42.fr>          +#+  +:+       +#+         #
+#    By: sabdelra <sabdelra@student.42abudhabi.a    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/09 01:58:20 by sabdelra          #+#    #+#              #
-#    Updated: 2023/01/26 19:51:16 by sabdelra         ###   ########.fr        #
+#    Updated: 2023/01/27 03:32:38 by sabdelra         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 CFLAGS = -Wall -Werror -Wextra -g
 
-SRCS = put.c utils.c ft_printf.c bonsu.c bonus_utils.c
+SRCS = put.c utils.c ft_printf.c bonsu.c bonus_utils.c error.c
 
-BSRCS = put.c utils.c ft_printf.c bonsu.c bonus_utils.c
+BSRCS = put.c utils.c ft_printf.c bonsu.c bonus_utils.c error.c
 
 OBJS = $(SRCS:.c=.o)
 

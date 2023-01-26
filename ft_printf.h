@@ -6,7 +6,7 @@
 /*   By: sabdelra <sabdelra@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 20:10:03 by sabdelra          #+#    #+#             */
-/*   Updated: 2023/01/27 03:30:44 by sabdelra         ###   ########.fr       */
+/*   Updated: 2023/01/27 03:33:46 by sabdelra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,6 @@ t_flag	*init_strct(const char **format_string);
 int		parse(const char **format_string, va_list arguments, t_flag *formating);
 
 //error
-int		mem_err(void *allocated);
+void	mem_err(void *allocated);
 
 #endif
