@@ -1,4 +1,4 @@
-*.o
+.o
 main.c
-printfTester/
-venv/
+printfTester
+venv
