@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonsu.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabdelra <sabdelra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabdelra <sabdelra@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 17:22:57 by sabdelra          #+#    #+#             */
-/*   Updated: 2023/01/26 22:21:37 by sabdelra         ###   ########.fr       */
+/*   Updated: 2023/01/27 03:29:35 by sabdelra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,23 +21,22 @@ t_flag	*init_strct(const char **fstr)
 	t_flag	*f;
 
 	f = malloc(sizeof(t_flag));
-	if (!f)
-		return (NULL);
+	mem_err(f);
 	defaults(f);
 	while (is_flag_numeric(fstr, f))
 	{
 		if (!(f->left_justify) && **fstr == '0')
 			f->padding = '0';
 		else if (f->padding != '0' && **fstr == '-')
-			f->left_justify = true;
+			f->left_justify = TRUE;
 		else if (**fstr == '#')
-			f->hash = true;
+			f->hash = TRUE;
 		else if (f->show_positive == 0 && **fstr == '+')
 			f->show_positive = "+";
 		else if (f->show_positive == 0 && **fstr == ' ')
 			f->show_positive = " ";
 		else if (**fstr == '.')
-			f->precision = true;
+			f->precision = TRUE;
 		(*fstr)++;
 	}
 	return (f);
@@ -135,8 +134,7 @@ static char	*create_padding(t_flag *f)
 	if (size > 0)
 	{
 		pad = malloc(sizeof(char) * size + 1);
-		if (!pad)
-			return (0);
+		mem_err(pad);
 	}
 	else
 	{

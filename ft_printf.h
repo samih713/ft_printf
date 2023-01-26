@@ -3,21 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sabdelra <sabdelra@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sabdelra <sabdelra@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 20:10:03 by sabdelra          #+#    #+#             */
-/*   Updated: 2023/01/26 19:14:19 by sabdelra         ###   ########.fr       */
+/*   Updated: 2023/01/27 03:30:44 by sabdelra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
-
-#include <unistd.h>
-#include <stdarg.h>
-#include <limits.h>
-#include <stdlib.h>
+# include <unistd.h>
+# include <stdarg.h>
+# include <limits.h>
+# include <stdlib.h>
 
 int		ft_printf(const char *format_string, ...);
 char	*convert_specifier(char format_specifier, va_list arguments);
@@ -35,14 +34,15 @@ int		length_of_integer(long int x);
 int		length_of_hex(unsigned long int x);
 
 // bonus
-typedef int BOOL;
-#define true 1
-#define false 0
+typedef int	t_bool;
+# define TRUE 1
+# define FALSE 0
+
 typedef struct s_flag
 {
-	BOOL	left_justify;
-	BOOL	hash;
-	BOOL	precision;
+	t_bool	left_justify;
+	t_bool	hash;
+	t_bool	precision;
 	char	*show_positive;
 	int		p_value;
 	char	padding;
@@ -56,8 +56,11 @@ char	*putchr(int c);
 int		is_flag_numeric(const char **format_string, t_flag *formating);
 void	defaults(t_flag *formating);
 
-int	is_numeric(char c);
-t_flag *init_strct(const char **format_string);
-int	parse(const char **format_string, va_list arguments, t_flag *formating);
+int		is_numeric(char c);
+t_flag	*init_strct(const char **format_string);
+int		parse(const char **format_string, va_list arguments, t_flag *formating);
+
+//error
+int		mem_err(void *allocated);
 
 #endif
