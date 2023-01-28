@@ -6,7 +6,7 @@
 /*   By: sabdelra <sabdelra@student.42abudhabi.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 17:22:57 by sabdelra          #+#    #+#             */
-/*   Updated: 2023/01/27 03:29:35 by sabdelra         ###   ########.fr       */
+/*   Updated: 2023/01/28 01:29:43 by sabdelra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_flag	*init_strct(const char **fstr)
 	defaults(f);
 	while (is_flag_numeric(fstr, f))
 	{
-		if (!(f->left_justify) && **fstr == '0')
+		if ((!f->precision && !f->width) && !(f->left_justify) && **fstr == '0')
 			f->padding = '0';
 		else if (f->padding != '0' && **fstr == '-')
 			f->left_justify = TRUE;

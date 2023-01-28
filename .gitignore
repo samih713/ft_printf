@@ -2,5 +2,8 @@
 *.a
 *.o
 main.c
-printfTester
-venv
+.printfTester
+.venv
+.briseur2reves
+.ft_printf_tester
+
